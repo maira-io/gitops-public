@@ -1,0 +1,55 @@
+{{ if has "argocd" $.Values.apps }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: argocd
+  namespace: argocd
+  labels:
+    app: argocd
+spec:
+  project: {{ $.Values.project }}
+  source:
+    repoURL: https://github.com/argoproj/argo-helm.git
+    targetRevision: argo-cd-5.24.3
+    path: charts/argo-cd
+    helm:
+      # keep values in sync with argocd/values.yaml
+      values: |
+        server:
+          ingress:
+            enabled: false
+            hosts:
+            - argocd.localdev
+        dex:
+          enabled: false
+        configs:
+          repositories:
+            argo-helm:
+              type: git
+              url: https://github.com/argoproj/argo-helm.git
+            temporal-git:
+              type: git
+              url: https://github.com/temporalio/helm-charts
+            sealed-secrets:
+              type: helm
+              url: https://bitnami-labs.github.io/sealed-secrets
+            prometheus-community:
+              type: helm
+              url: https://prometheus-community.github.io/helm-charts
+            grafana-helm:
+              type: helm
+              url: https://grafana.github.io/helm-charts
+            nginx:
+              type: helm
+              url: https://helm.nginx.com/stable
+  destination:
+    name: {{ $.Values.destination }}
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true
+{{ end }}
