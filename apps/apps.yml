@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:maira-io/maira-gitops.git
+    targetRevision: simple
+    path: apps
+    helm:
+      # keep it in sync with argocd/values.yml
+      #values: |
+      #  apps:
+      #  - argocd
+  destination:
+    name: in-cluster
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true

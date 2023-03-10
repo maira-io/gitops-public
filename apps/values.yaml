@@ -1,0 +1,11 @@
+destination: in-cluster
+repoURL: git@github.com:maira-io/maira-gitops.git
+project: default
+namespace: maira
+
+# default apps configuration can be changed in argo
+apps:
+- argocd
+- mongodb
+- cassandra
+- temporal

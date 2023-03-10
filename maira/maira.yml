@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: maira
+  namespace: argocd
+spec:
+  destination:
+    namespace: maira
+    server: https://kubernetes.default.svc
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true
+  source:
+    path: .
+    repoURL: git@github.com:maira-io/maira-helm-charts.git
+    targetRevision: development
+    helm:
+      # keep values in sync with argocd/values.yaml
+      values: |
+        api:
+          auth:
+            enabled: false
+        ui:
+          env:
+          - name:  BASE_URL
+            value: https://localhost:8000/v1
+          - name:  DOMAIN
+            value: maira-demo.us.auth0.com
+          - name:  CLIENT_ID
+            value: mtLWusyXtPIm98r7Mo2E601YKlTfhFOM
+          - name: audience
+            value: https://api.maira-demo.maira.io
+          - name: REACT_APP_CUSTOM_SIGNUP
+            value: yes
+        api:
+          auth0_tenant: maira-demo
+          default_tenant: maira.io
+          admin_user_email: sbansal@maira.io

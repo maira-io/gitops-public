@@ -1,0 +1,72 @@
+{{ if has "temporal" $.Values.apps }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: 
+  name: temporal
+  namespace: argocd
+  labels:
+    app: temporal
+spec:
+  project: {{ $.Values.project }}
+  source:
+    repoURL: 'https://github.com/temporalio/helm-charts'
+    path: .
+    targetRevision: v1.18.0
+    helm:
+      values: |
+        schema:
+          setup:
+            enabled: true
+          update:
+            enabled: true
+        grafana:
+          enabled: false
+        elasticsearch:
+          enabled: false
+        mysql:
+          enabled: false
+        prometheus:
+          enabled: false
+        cassandra:
+          enabled: false
+        server:
+          config:
+            persistence:
+              default:
+                cassandra:
+                  hosts: cassandra
+                  port: 9042
+                  user: cassandra_user
+                  existingSecret: temporal-default-store
+                  tls:
+                    caData: $(base64 --wrap=0 cassandra.ca.pem)
+                    enabled: false
+                  replicationFactor: 1
+                  keyspace: temporal
+                  consistency:
+                    default:
+                      consistency: "local_quorum"
+                      serialConsistency: "local_serial"
+              visibility:
+                cassandra:
+                  hosts: cassandra
+                  port: 9042
+                  user: cassandra_user
+                  existingSecret: temporal-default-store
+                  replicationFactor: 1
+                  keyspace: temporal_visibility
+                  consistency:
+                    default:
+                      consistency: "local_quorum"
+                      serialConsistency: "local_serial"
+  destination:
+    name: {{ $.Values.destination }}
+    namespace: {{ $.Values.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true
+{{ end }}
