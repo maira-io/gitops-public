@@ -1,5 +1,5 @@
 destination: in-cluster
-repoURL: git@github.com:maira-io/maira-gitops.git
+repoURL: https://github.com/maira-io/gitops-public.git
 project: default
 namespace: maira
 

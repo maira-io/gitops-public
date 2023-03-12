@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:maira-io/maira-gitops.git
-    targetRevision: simple
+    repoURL: https://github.com/maira-io/gitops-public.git
+    targetRevision: main
     path: apps
     helm:
       # keep it in sync with argocd/values.yml

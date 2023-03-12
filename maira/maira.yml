@@ -17,7 +17,7 @@ spec:
     - CreateNamespace=true
   source:
     path: .
-    repoURL: git@github.com:maira-io/maira-helm-charts.git
+    repoURL: https://github.com/maira-io/maira-helm-charts.git
     targetRevision: development
     helm:
       # keep values in sync with argocd/values.yaml

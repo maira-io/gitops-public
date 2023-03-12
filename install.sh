@@ -25,8 +25,6 @@ kubectl create -n maira secret tls maira-tls-secret --cert=tls.crt --key=tls.key
 
 
 # TODO: remove when all is public
-gpg --decrypt argocd/maira-gitops-repo-secret.yml.asc 2> /dev/null | kubectl apply -f -
-gpg --decrypt argocd/maira-helm-charts-repo-seret.yml.gpg 2> /dev/null | kubectl apply -f -
 gpg --decrypt argocd/image-pull-secret.yml.gpg 2> /dev/null | kubectl apply -f -
 
 # Generate password for all services
