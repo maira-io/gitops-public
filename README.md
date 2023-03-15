@@ -90,6 +90,14 @@ minikube   Ready    control-plane,master   22h   v1.23.3
           auth0_tenant: maira-demo
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
+          slack:
+            bot_server: api.demo.maira.io:443
+            maira_client_id: ""
+            maira_oauth_key: ""
+            slack_client_id: ""
+            slack_oauth_key: ""
+            slack_signing_secret: ""
+            log_level: info
 ```
 
 2) Now execute install.sh script, which generates secrets and bootstrap argocd with all helm charts
