@@ -91,14 +91,13 @@ minikube   Ready    control-plane,master   22h   v1.23.3
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
           slack:
-            bot_server: api.demo.maira.io:443
-            maira_client_id: ""
-            maira_oauth_key: ""
+            bot_server: "localhost:8000"
             slack_client_id: ""
             slack_oauth_key: ""
             slack_signing_secret: ""
             log_level: info
 ```
+NOTE: After installing slack app, you can go to workspace dropdown(top left) -> Settings and Administration -> Manage Apps. Use the Client ID, Client Secret and Signing Secret from `Basic Information` page of the slack app.
 
 2) Now execute install.sh script, which generates secrets and bootstrap argocd with all helm charts
 

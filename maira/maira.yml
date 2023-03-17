@@ -42,9 +42,7 @@ spec:
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
           slack:
-            bot_server: api.demo.maira.io:443
-            maira_client_id: ""
-            maira_oauth_key: ""
+            bot_server: "localhost:8000"
             slack_client_id: ""
             slack_oauth_key: ""
             slack_signing_secret: ""
