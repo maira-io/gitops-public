@@ -95,6 +95,9 @@ minikube   Ready    control-plane,master   22h   v1.23.3
             slack_client_id: ""
             slack_oauth_key: ""
             slack_signing_secret: ""
+            socket_mode: false
+            slack_app_token: ""
+            slack_bot_token: ""
             log_level: info
 ```
 NOTE: After installing slack app, you can go to workspace dropdown(top left) -> Settings and Administration -> Manage Apps. Use the Client ID, Client Secret and Signing Secret from `Basic Information` page of the slack app.
