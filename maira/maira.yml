@@ -22,9 +22,8 @@ spec:
     helm:
       # keep values in sync with argocd/values.yaml
       values: |
-        api:
-          auth:
-            enabled: false
+        ingress:
+          enabled: true
         ui:
           env:
           - name:  BASE_URL
@@ -36,8 +35,17 @@ spec:
           - name: audience
             value: https://api.maira-demo.maira.io
           - name: REACT_APP_CUSTOM_SIGNUP
-            value: yes
+            value: 'yes'
+          service:
+            type: NodePort
+        sitemanager:
+          service:
+            type: NodePort
         api:
+          auth:
+            enabled: false
+          service:
+            type: NodePort
           auth0_tenant: maira-demo
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
