@@ -92,12 +92,12 @@ minikube   Ready    control-plane,master   22h   v1.23.3
           admin_user_email: sbansal@maira.io
           slack:
             bot_server: "localhost:8000"
-            slack_client_id: ""
-            slack_oauth_key: ""
-            slack_signing_secret: ""
+            socket_mode: true
+            slack_app_token: ""
+            slack_bot_token: ""
             log_level: info
 ```
-NOTE: After installing slack app, you can go to workspace dropdown(top left) -> Settings and Administration -> Manage Apps. Use the Client ID, Client Secret and Signing Secret from `Basic Information` page of the slack app.
+NOTE: Use the `Bot User OAuth Token` from OAuth and Permissions page of the app to get the `slack_bot_token`. Select Basic Information link from the left sidebar and scroll down to section App-Level Token. Click on the Generate Token and Scopes button. Enter a Name, select `connections:write` scope, and click Generate and Use this token for `slack_app_token`
 
 2) Now execute install.sh script, which generates secrets and bootstrap argocd with all helm charts
 
