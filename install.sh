@@ -23,10 +23,6 @@ kubectl create ns argocd
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=*.maira.local"
 kubectl create -n maira secret tls maira-tls-secret --cert=tls.crt --key=tls.key
 
-
-# TODO: remove when all is public
-gpg --decrypt argocd/image-pull-secret.yml.gpg 2> /dev/null | kubectl apply -f -
-
 # Generate password for all services
 PASSWORD=$(openssl rand -base64 8 | md5)
 
