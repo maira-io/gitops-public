@@ -27,7 +27,7 @@ spec:
         ui:
           env:
           - name:  BASE_URL
-            value: https://localhost:8000/v1
+            value: /v1
           - name:  DOMAIN
             value: maira-demo.us.auth0.com
           - name:  CLIENT_ID
@@ -50,11 +50,8 @@ spec:
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
           slack:
-            bot_server: "localhost:8000"
-            slack_client_id: ""
-            slack_oauth_key: ""
-            slack_signing_secret: ""
-            socket_mode: false
-            slack_app_token: ""
+            bot_server: "localhost:3000"
+            socket_mode: true
             slack_bot_token: ""
+            slack_app_token: ""
             log_level: info

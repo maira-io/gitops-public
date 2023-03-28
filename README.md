@@ -1,103 +1,35 @@
 # Installation
 
-Prefered option is using minikube since it allows to do port forwarding on mac os.
+By following instructions below you can deployment Maira on any k8s cluster. If you are installing on your laptop, you can use kind or minikube. For a company-wide installtion, you can install it on k8s cluster on public cloud (e.g. Google GKE or Amazon EKS or Azure AKS)
 
-## Using Kind
+For laptop based deployment, install kind or minikube using instructions below.
+[Install kind](kind.md)
 
-We use https://kind.sigs.k8s.io/ instead of minikube to run tests on local laptop.
+[Install minikube](minikube.md)
 
-```
-$ go install sigs.k8s.io/kind@v0.17.0
-go: downloading sigs.k8s.io/kind v0.17.0
-go: downloading github.com/spf13/cobra v1.4.0
-go: downloading github.com/alessio/shellescape v1.4.1
-go: downloading github.com/pelletier/go-toml v1.9.4
-go: downloading github.com/evanphx/json-patch/v5 v5.6.0
-go: downloading github.com/google/safetext v0.0.0-20220905092116-b49f7bc46da2
-go install sigs.k8s.io/kind@v0.17.0
+For cloud based deployment, make sure credentials to access your cloud based k8s cluster are in your kubeconfig file. 
 
-$ kind create cluster
-Creating cluster "kind" ...
- ✓ Ensuring node image (kindest/node:v1.25.3) 🖼
-⢎⡰ Preparing nodes 📦  ^R
- ✓ Preparing nodes 📦
- ✓ Writing configuration 📜
- ✓ Starting control-plane 🕹️
- ✓ Installing CNI 🔌
- ✓ Installing StorageClass 💾
-Set kubectl context to "kind-kind"
-You can now use your cluster with:
-
-kubectl cluster-info --context kind-kind
-
-Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
-```
-
-Kubernetes should be running
-
-## Using Minikube
-
-```
-$ kubectl get node
-NAME                 STATUS   ROLES           AGE   VERSION
-kind-control-plane   Ready    control-plane   56s   v1.25.3
-```
-
-```
-brew install virtualbox minikube
-```
-
-```
-minikube start
-j.pavlik@C02FN35KMD6R:~$ minikube start
-😄  minikube v1.25.2 on Darwin 12.6.2
-✨  Using the hyperkit driver based on existing profile
-👍  Starting control plane node minikube in cluster minikube
-🔄  Restarting existing hyperkit VM for "minikube" ...
-🐳  Preparing Kubernetes v1.23.3 on Docker 20.10.12 ...
-    ▪ kubelet.housekeeping-interval=5m
-🔎  Verifying Kubernetes components...
-    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
-🌟  Enabled addons: storage-provisioner, default-storageclass
-
-❗  /usr/local/bin/kubectl is version 1.25.2, which may have incompatibilites with Kubernetes 1.23.3.
-    ▪ Want kubectl v1.23.3? Try 'minikube kubectl -- get pods -A'
-🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-```
-
-```
-$ k get node
-NAME       STATUS   ROLES                  AGE   VERSION
-minikube   Ready    control-plane,master   22h   v1.23.3
-```
 
 ## Application installation
 
-1) Modify Maira configuration in `maira/maira.yml` to set default tenant and admin user email.
+1) Modify Maira configuration in `maira/maira.yml` to set default tenant and admin user email. Admin user email should be your work email address and default tenant should be the domain name for your company (e.g. maira.io)
 
 ```
-        ui:
-          env:
-          - name:  BASE_URL
-            value: https://localhost:8000/v1
-          - name:  DOMAIN
-            value: maira-demo.us.auth0.com
-          - name:  CLIENT_ID
-            value: mtLWusyXtPIm98r7Mo2E601YKlTfhFOM
-          - name: audience
-            value: https://api.maira-demo.maira.io
         api:
-          auth0_tenant: maira-demo
+          ...
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
           slack:
-            bot_server: "localhost:8000"
+            bot_server: "localhost:3000"
             socket_mode: true
             slack_app_token: ""
             slack_bot_token: ""
             log_level: info
 ```
-NOTE: Use the `Bot User OAuth Token` from OAuth and Permissions page of the app to get the `slack_bot_token`. Select Basic Information link from the left sidebar and scroll down to section App-Level Token. Click on the Generate Token and Scopes button. Enter a Name, select `connections:write` scope, and click Generate and Use this token for `slack_app_token`
+
+For slack to work, you need the app token and bot token as explained [here](https://docs.maira.io/integrations/docs/slack/#on-prem-deployment)
+
+Note: bot_server is the DNS address of where Maira will be accessible after it is deployed. For laptop based deployment, leave it as `localhost:3000`. For cloud-based deployment, you will need to configure a DNS address where maira can be accessed (e.g. maira.example.com)
 
 2) Now execute install.sh script, which generates secrets and bootstrap argocd with all helm charts
 
@@ -174,10 +106,12 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl port-forward service/argocd-server -n argocd 8080:443
 ```
 
-## Clean up the environment
+3) If you are using cloud-based deployment, you should be able to access maira by pointing your browser to the public IP address allocated to Maira.
 
-Destroy minikube by the following command.
+If you are using laptop-based deployment, port-forward Maira's nginx based loadbalancer to local port 3000
 
 ```
-$ minikube delete
+$ kubectl -n ingress port-forward services/ingress-ingress-nginx-controller 3000:443
 ```
+
+After this, you can access Maira on https://localhost:3000
