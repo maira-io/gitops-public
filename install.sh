@@ -43,14 +43,14 @@ helm upgrade --install --create-namespace --version 5.24.3 --values argocd/value
 
 # Wait for agrocd to start
 kubectl wait --for=condition=available --timeout=180s deployment/argocd-server -n argocd
-echo -n "ArcoCD username admin and password: "
+echo -n "ArgoCD username admin and password: "
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 echo
 
 echo "Apply apps into Argo CD"
 kubectl apply -f apps/apps.yml
 
-echo "Wait for for databases"
+echo "Wait for databases"
 until kubectl -n maira get po | grep temporal-worker
 do
     echo "waiting for temporal-worker to get created"
@@ -62,7 +62,7 @@ echo "Temporal worker is ready"
 
 kubectl apply -f maira/maira.yml
 
-echo "Wait for for maira"
+echo "Wait for maira"
 until kubectl -n maira get po | grep maira-cloud-worker | grep 1/1
 do
     echo "waiting for temporal-worker to get created"
