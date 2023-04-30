@@ -20,7 +20,7 @@ fi
 kubectl create ns maira
 kubectl create ns argocd
 # create key and cert for maira.local
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=*.maira.local"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=*.localdev.me" -addext "subjectAltName = DNS:*.localdev.me"
 kubectl create -n maira secret tls maira-tls-secret --cert=tls.crt --key=tls.key
 
 # Generate password for all services

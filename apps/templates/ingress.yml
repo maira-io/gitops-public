@@ -9,15 +9,17 @@ metadata:
 spec:
   project: {{ $.Values.project }}
   source:
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.6.0
-    chart: ingress-nginx
+    repoURL: 'https://helm.nginx.com/stable'
+    targetRevision: 0.16.2
+    chart: nginx-ingress
     helm:
       values: |
         controller:
-          admissionWebhooks: 
-            enabled: false
-            port: 8444
+          service:
+            externalTrafficPolicy: Cluster
+          config:
+            entries:
+              http2: "true"
   destination:
     name: {{ $.Values.destination }}
     namespace: ingress

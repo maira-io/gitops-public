@@ -31,6 +31,13 @@ For slack to work, you need the app token and bot token as explained [here](http
 
 Note: bot_server is the DNS address of where Maira will be accessible after it is deployed. For laptop based deployment, leave it as `localhost:3000`. For cloud-based deployment, you will need to configure a DNS address where maira can be accessed (e.g. maira.example.com)
 
+If you want to use your own certificate, please create them in the k8s cluster by these 2 commands
+
+```
+kuectl create ns maira
+kubectl create -n maira secret tls maira-tls-secret --cert=tls.crt --key=tls.key
+```
+
 2) Now execute install.sh script, which generates secrets and bootstrap argocd with all helm charts
 
 ```

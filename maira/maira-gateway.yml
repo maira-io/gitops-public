@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: maira-gateway
+  namespace: argocd
+spec:
+  destination:
+    namespace: maira
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      values: |
+        replicaCount: 1
+        maira:
+          siteManagerAddress: ""
+          site: site-1
+          tenant: maira-demo
+          namespace: default
+          default_site_key: <generated key>
+    path: .
+    repoURL: https://github.com/maira-io/maira-gateway-helm-charts
+    targetRevision: HEAD
