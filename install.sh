@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Generate password for all services
+PASSWORD=${PASSWORD:-$(openssl rand -base64 8 | md5)}
+API_KEY=${API_KEY:-$(openssl rand -base64 8 | md5)}
+
 if ! command -v gpg &> /dev/null
 then
     echo "gpg was not found. Please install or add to path and retry"
@@ -23,8 +28,9 @@ kubectl create ns argocd
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=*.localdev.me" -addext "subjectAltName = DNS:*.localdev.me"
 kubectl create -n maira secret tls maira-tls-secret --cert=tls.crt --key=tls.key
 
-# Generate password for all services
-PASSWORD=$(openssl rand -base64 8 | md5)
+# set API key for maira
+sed -i "s/<generated key>/$API_KEY/g" maira/maira.yml
+sed -i "s/<generated key>/$API_KEY/g" maira/maira-gateway.yml
 
 kubectl create -n maira secret generic maira-db-uri-secret --from-literal=db_uri="mongodb://root:$PASSWORD@mongodb.maira:27017/?authSource=admin"
 kubectl create -n maira secret generic temporal-default-store --from-literal=cassandra-password="$PASSWORD" \
@@ -63,4 +69,15 @@ do
     kubectl -n maira get po
     sleep 5
 done
-echo "Maira is ready"
+echo "Maira API is ready"
+
+echo "Do you want to deploy Maira Gateway? [y/N]"
+read answer
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "User confirmed. Continuing with installation..."
+    kubectl apply -f maira/maira-gateway.yml
+    echo "Maira Gateway installatin is done."
+else
+    echo "User cancelled. Installation done. Exiting..."
+    exit 0
+fi

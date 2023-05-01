@@ -48,6 +48,8 @@ spec:
             type: NodePort
           auth0_tenant: maira-demo
           default_tenant: maira.io
+          default_site_key: <generated key>
+          default_site: site-1
           admin_user_email: sbansal@maira.io
           slack:
             bot_server: "localhost:3000"
