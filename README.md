@@ -2,10 +2,9 @@
 
 By following instructions below you can deployment Maira on any k8s cluster. If you are installing on your laptop, you can use kind or minikube. For a company-wide installtion, you can install it on k8s cluster on public cloud (e.g. Google GKE or Amazon EKS or Azure AKS)
 
-For laptop based deployment, install kind or minikube using instructions below.
-[Install kind](kind.md)
+For laptop based deployment, install kind using instructions below.
 
-[Install minikube](minikube.md)
+[Install kind](kind.md)
 
 For cloud based deployment, make sure credentials to access your cloud based k8s cluster are in your kubeconfig file. 
 
@@ -19,12 +18,7 @@ For cloud based deployment, make sure credentials to access your cloud based k8s
           ...
           default_tenant: maira.io
           admin_user_email: sbansal@maira.io
-          slack:
-            bot_server: "localhost:3000"
-            socket_mode: true
-            slack_app_token: ""
-            slack_bot_token: ""
-            log_level: info
+          ...
 ```
 
 For slack to work, you need the app token and bot token as explained [here](https://docs.maira.io/integrations/docs/slack/#on-prem-deployment)
@@ -121,4 +115,4 @@ If you are using laptop-based deployment, port-forward Maira's nginx based loadb
 $ kubectl -n ingress port-forward services/ingress-ingress-nginx-controller 3000:443
 ```
 
-After this, you can access Maira on https://localhost:3000
+After this, you can access Maira on https://maira.localdev.me:3000
