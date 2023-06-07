@@ -8,6 +8,13 @@ spec:
     namespace: maira
     server: https://kubernetes.default.svc
   project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true
   source:
     helm:
       values: |
